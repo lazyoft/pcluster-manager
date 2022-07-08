@@ -56,6 +56,40 @@ const theme = createTheme({
     }
 });
 
+function App({ Component, pageProps }) {
+    const onAceLoad = useCallback(() => {
+        window.editor = window.ace.edit('editor')
+        window.ace.config.set('basePath', 'https://pagecdn.io/lib/ace/1.4.13/')
+        window.ace.config.set('loadWorkerFromBlob', false);
+        window.ace.config.set('showFoldWidgets', false);
+        window.ace.config.set('showPrintMargin', false);
+    }, [])
+
+
+    return (
+        <>
+          <Head>
+              <meta name="viewport" content="width=device-width, initial-scale=1" />
+              <title>Pcluster Manager</title>
+          </Head>
+              <Provider store={store}>
+                  <ThemeProvider theme={theme}>
+                      <SnackbarProvider>
+                          <Component {...pageProps} />
+                      </SnackbarProvider>
+                  </ThemeProvider>
+              </Provider>
+              <div id="editor"></div>
+              <Script
+                  src="https://pagecdn.io/lib/ace/1.4.13/ace.min.js"
+                  crossOrigin="anonymous"
+                  integrity="sha256-GjtAsBCI/KPlEYQf0I8yNimcThRoWMnk7Vpi+dUt+GY="
+                  onLoad={onAceLoad}
+              />
+        </>
+    )
+}
+
 /**
  * Disable SSR
  * 
@@ -71,51 +105,6 @@ const theme = createTheme({
  * currently being built as a static export,
  * thus SSR is not relevant.
  */
-function SafeHydrate({ children }) {
-    // return children
-    return (
-        <div suppressHydrationWarning>
-            {typeof window === 'undefined' ? null : children}
-        </div>
-    )
-}
-
-function App({ Component, pageProps }) {
-    const onAceLoad = useCallback(() => {
-        window.editor = window.ace.edit('editor')
-        window.ace.config.set('basePath', 'https://pagecdn.io/lib/ace/1.4.13/')
-        window.ace.config.set('loadWorkerFromBlob', false);
-        window.ace.config.set('showFoldWidgets', false);
-        window.ace.config.set('showPrintMargin', false);
-    }, [])
-
-
-    return (
-        <>
-            <Head>
-                <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <title>Pcluster Manager</title>
-            </Head>
-            <SafeHydrate>
-                <Provider store={store}>
-                    <ThemeProvider theme={theme}>
-                        <SnackbarProvider>
-                            <Component {...pageProps} />
-                        </SnackbarProvider>
-                    </ThemeProvider>
-                </Provider>
-                <div id="editor"></div>
-                <Script
-                    src="https://pagecdn.io/lib/ace/1.4.13/ace.min.js"
-                    crossOrigin="anonymous"
-                    integrity="sha256-GjtAsBCI/KPlEYQf0I8yNimcThRoWMnk7Vpi+dUt+GY="
-                    onLoad={onAceLoad}
-                />
-            </SafeHydrate>
-        </>
-    )
-}
-
 export default dynamic(() => Promise.resolve(App), {
     ssr: false
 });
