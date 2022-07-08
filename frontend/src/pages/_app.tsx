@@ -59,7 +59,7 @@ declare global {
 function App({ Component, pageProps }: AppProps) {
   const onAceLoad = useCallback(() => {
     window.editor = window.ace.edit('editor')
-    window.ace.config.set('basePath', 'https://pagecdn.io/lib/ace/1.4.13/')
+    window.ace.config.set('basePath', '/third-party/ace-1.4.13/')
     window.ace.config.set('loadWorkerFromBlob', false);
     window.ace.config.set('showFoldWidgets', false);
     window.ace.config.set('showPrintMargin', false);
@@ -81,9 +81,7 @@ function App({ Component, pageProps }: AppProps) {
       </Provider>
       <div id="editor"></div>
       <Script
-        src="https://pagecdn.io/lib/ace/1.4.13/ace.min.js"
-        crossOrigin="anonymous"
-        integrity="sha256-GjtAsBCI/KPlEYQf0I8yNimcThRoWMnk7Vpi+dUt+GY="
+        src="/third-party/ace-1.4.13/ace.min.js"
         onLoad={onAceLoad}
       />
     </>
